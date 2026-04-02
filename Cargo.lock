@@ -139,6 +139,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "ketzal-templates"
+version = "0.1.0"
+
+[[package]]
 name = "ketzal-validation"
 version = "0.1.0"
 dependencies = [
