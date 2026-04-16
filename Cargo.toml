@@ -4,7 +4,7 @@ members = [
   "example/users_web",
   "ketzal",
   "ketzal-http",
-  "ketzal-router",
+  "ketzal-router", "ketzal-templates",
   "ketzal-validation",
 
 ]
