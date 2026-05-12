@@ -1,5 +1,5 @@
 [package]
-name = "ketzal-router"
+name = "ketzal-router-macros"
 version = "0.1.0"
 edition.workspace = true
 license-file.workspace = true
@@ -8,9 +8,10 @@ homepage.workspace = true
 repository.workspace = true
 description.workspace = true
 
+[lib]
+proc-macro = true
 
 [dependencies]
-http = "1"
-indexmap = "2"
-inventory = "0.3"
-ketzal-http = { path = "../ketzal-http" }
+proc-macro2 = "1"
+quote       = "1"
+syn         = { version = "2", features = ["full"] }
