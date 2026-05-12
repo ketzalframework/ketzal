@@ -20,22 +20,39 @@ impl Connection {
     pub fn new(stream: TcpStream, kind: RouterKind) -> Self {
         Self { stream, kind }
     }
-
     pub async fn handle(&mut self) -> io::Result<()> {
         let request = match h1::decode(&mut self.stream).await? {
             Some(req) => req,
             None => return Ok(()),
         };
 
-        let router = match self.kind {
-            RouterKind::Web => registry::get_web_router(),
-            RouterKind::Api => registry::get_api_router(),
-        };
+        let response = match self.kind {
+            #[cfg(feature = "web")]
+            RouterKind::Web => {
+                let router = registry::get_web_router();
+                let method = request.method.clone();
+                let path = request.path.clone();
+                router
+                    .handle(&method, &path, request)
+                    .map(|f| f)
+                    .unwrap_or_else(|| Box::pin(async { Response::not_found() }))
+                    .await
+            }
 
-        let response = match router.handle(&request.method.clone(), &request.path.clone(), request)
-        {
-            Some(future) => future.await,
-            None => Response::not_found(),
+            #[cfg(feature = "api")]
+            RouterKind::Api => {
+                let router = registry::get_api_router();
+                let method = request.method.clone();
+                let path = request.path.clone();
+                router
+                    .handle(&method, &path, request)
+                    .map(|f| f)
+                    .unwrap_or_else(|| Box::pin(async { Response::not_found() }))
+                    .await
+            }
+
+            #[allow(unreachable_patterns)]
+            _ => Response::not_found(),
         };
 
         let bytes = h1::encode(&response);

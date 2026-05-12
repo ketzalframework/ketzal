@@ -1,10 +1,38 @@
 pub mod config;
 pub mod routes;
 pub mod server;
-pub use ketzal_http::{Request, Response};
-pub use ketzal_router::{Route, Router};
 
-// macro validator
+// ── External re-exports ───────────────────────────────────────────────────────
+
+pub use ctor;
+pub use inventory;
+pub use tokio;
+
+// ── ketzal-http re-exports ────────────────────────────────────────────────────
+
+pub use ketzal_http::{Request, Response};
+
+// ── ketzal-router re-exports ──────────────────────────────────────────────────
+
+pub use ketzal_router::handler::{into_boxed, BoxedHandler};
+pub use ketzal_router::route_definition::{RouteDefinition, RouteScope};
+
+// ── Internal re-exports ───────────────────────────────────────────────────────
+
+pub use config::Bootstrap;
+
+// ── Route macros ──────────────────────────────────────────────────────────────
+
+#[cfg(feature = "web")]
+pub use ketzal_router_macros::{controller, delete, get, patch, post, put};
+
+#[cfg(feature = "api")]
+pub use ketzal_router_macros::{api_controller, api_delete, api_get, api_patch, api_post, api_put};
+
+pub use ketzal_router_macros::main;
+
+// ── Validation macros ─────────────────────────────────────────────────────────
+
 #[macro_export]
 macro_rules! form_request {
     (
@@ -26,18 +54,14 @@ macro_rules! form_request {
         impl ketzal_validation::FormRequest for $name {
             fn rules(&self) -> std::collections::HashMap<&'static str, &'static str> {
                 let mut map = std::collections::HashMap::new();
-                $(
-                    map.insert($field, $rule);
-                )*
+                $(map.insert($field, $rule);)*
                 map
             }
 
             $(
                 fn messages(&self) -> std::collections::HashMap<&'static str, &'static str> {
                     let mut map = std::collections::HashMap::new();
-                    $(
-                        map.insert($msg_key, $msg_val);
-                    )*
+                    $(map.insert($msg_key, $msg_val);)*
                     map
                 }
             )?
@@ -45,9 +69,7 @@ macro_rules! form_request {
             $(
                 fn attributes(&self) -> std::collections::HashMap<&'static str, &'static str> {
                     let mut map = std::collections::HashMap::new();
-                    $(
-                        map.insert($attr_key, $attr_val);
-                    )*
+                    $(map.insert($attr_key, $attr_val);)*
                     map
                 }
             )?
@@ -55,67 +77,30 @@ macro_rules! form_request {
     };
 }
 
-// validate macros
-
-/// application/json
+/// Validates an `application/json` request body.
 #[macro_export]
 macro_rules! validate_json {
     ($req:expr => {
         $($field:literal => $rule:literal),* $(,)?
     }) => {{
         let __req = &$req;
-
-        match __req.validate_json([
-            $(
-                ($field, $rule),
-            )*
-        ]) {
+        match __req.validate_json([$(($field, $rule),)*]) {
             ::std::ops::ControlFlow::Continue(val) => val,
-            ::std::ops::ControlFlow::Break(resp) => return resp,
+            ::std::ops::ControlFlow::Break(resp)   => return resp,
         }
     }};
 }
-// application/x-www-form-urlencoded
+
+/// Validates an `application/x-www-form-urlencoded` request body.
 #[macro_export]
 macro_rules! validate_form {
     ($req:expr => {
         $($field:literal => $rule:literal),* $(,)?
     }) => {{
         let __req = &$req;
-
-        match __req.validate_form([
-            $(
-                ($field, $rule),
-            )*
-        ]) {
+        match __req.validate_form([$(($field, $rule),)*]) {
             ::std::ops::ControlFlow::Continue(val) => val,
-            ::std::ops::ControlFlow::Break(resp) => return resp,
+            ::std::ops::ControlFlow::Break(resp)   => return resp,
         }
     }};
-}
-
-#[macro_export]
-macro_rules! routes_web {
-    ($($route:expr);* $(;)?) => {
-        const _: () = {
-            #[::ctor::ctor]
-            fn __register() {
-                use $crate::routes::registry::register_web;
-                $( register_web($route); )*
-            }
-        };
-    };
-}
-
-#[macro_export]
-macro_rules! routes_api {
-    ($($route:expr);* $(;)?) => {
-        const _: () = {
-            #[::ctor::ctor]
-            fn __register() {
-                use $crate::routes::registry::register_api;
-                $( register_api($route); )*
-            }
-        };
-    };
 }
