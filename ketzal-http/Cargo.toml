@@ -12,7 +12,7 @@ description.workspace = true
 ketzal-validation = { version = "0.1.0", path = "../ketzal-validation" }
 
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
+serde_json = "1.0.149"
 serde_urlencoded = "0.7"
 urlencoding = "2"
 

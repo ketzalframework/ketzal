@@ -1,9 +1,7 @@
-use ketzal::config::Bootstrap;
+use ketzal::Bootstrap;
+mod controllers;
 
-mod app;
-mod routes;
-
-#[tokio::main]
+#[ketzal::main]
 async fn main() -> std::io::Result<()> {
     Bootstrap::default().create().await
 }

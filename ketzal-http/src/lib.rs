@@ -7,3 +7,11 @@ pub mod response;
 
 pub use request::Request;
 pub use response::Response;
+
+pub mod exceptions;
+pub use exceptions::HTTPException;
+
+pub mod macros;
+
+pub use http;
+pub use serde_json;

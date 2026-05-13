@@ -1,3 +1,7 @@
 pub mod registry;
 
-pub use registry::{get_api_router, get_web_router, register_api, register_web};
+#[cfg(feature = "web")]
+pub use registry::get_web_router;
+
+#[cfg(feature = "api")]
+pub use registry::get_api_router;
