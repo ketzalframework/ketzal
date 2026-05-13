@@ -10,7 +10,7 @@ pub use tokio;
 
 // ── ketzal-http re-exports ────────────────────────────────────────────────────
 
-pub use ketzal_http::{Request, Response};
+pub use ketzal_http::{HTTPException, Request, Response};
 
 // ── ketzal-router re-exports ──────────────────────────────────────────────────
 

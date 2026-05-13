@@ -27,8 +27,7 @@ pub fn expand_controller(scope: &str, attr: TokenStream, item: TokenStream) -> T
             }
         }
 
-        _ => syn::Error::new_spanned(input, "controller expects an impl block")
-            .to_compile_error(),
+        _ => syn::Error::new_spanned(input, "controller expects an impl block").to_compile_error(),
     }
     .into()
 }
