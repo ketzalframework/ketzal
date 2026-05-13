@@ -1,5 +1,5 @@
 use ketzal::Bootstrap;
-mod app;
+mod controllers;
 
 #[ketzal::main]
 async fn main() -> std::io::Result<()> {
