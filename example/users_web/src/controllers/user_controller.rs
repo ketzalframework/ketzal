@@ -1,4 +1,4 @@
-use ketzal::{controller, validate_form, HTTPException, Request, Response};
+use ketzal::{controller, HTTPException, Request, Response};
 
 #[controller("/users")]
 impl UserController {
@@ -9,14 +9,12 @@ impl UserController {
 
     #[post("/")]
     pub async fn store(req: Request) -> Response {
-        let validated = validate_form!(req => {
-            "name"     => "required|string|max:255",
-            "email"    => "required|email",
-            "password" => "required|min:8|confirmed",
-        });
-
-        let safe = validated.except(["password"]).all();
-        Response::json(safe)
+        Response!({
+        content = {
+            "path": req.path,
+            "method": req.method.as_str()
+        }
+    });
     }
 
     #[get("/:id")]
@@ -24,7 +22,11 @@ impl UserController {
         if id == 0 {
             return HTTPException!(status_code = 404, detail = "User not found");
         }
-
-        Response::json("Hello")
+        Response!({
+            content = {
+                "message": id,
+                "token": "jwt-token"
+            }
+        });
     }
 }
