@@ -17,19 +17,6 @@ impl Response {
         res.body = body.into();
         res
     }
-
-    pub fn ok(body: impl Into<Vec<u8>>) -> Self {
-        Self::with_body(StatusCode::OK, body)
-    }
-
-    pub fn not_found() -> Self {
-        Self::with_body(StatusCode::NOT_FOUND, b"Not Found".to_vec())
-    }
-
-    pub fn bad_request(body: impl Into<Vec<u8>>) -> Self {
-        Self::with_body(StatusCode::BAD_REQUEST, body)
-    }
-
     pub fn header(mut self, key: &'static str, value: &'static str) -> Self {
         self.headers.insert(key, HeaderValue::from_static(value));
         self

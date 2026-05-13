@@ -1,11 +1,11 @@
-use ketzal::{controller, validate_form, Request, Response};
+use ketzal::{controller, validate_form, HTTPException, Request, Response};
 
 #[controller("/users")]
 impl UserController {
-    #[post("/login")]
-    pub async fn login(_req: Request) -> Response {
-        Response::ok("Hello, World!")
-    }
+    //#[post("/login")]
+    //pub async fn login(_req: Request) -> Response {
+    //   Response::ok("Hello, World!")
+    //}
 
     #[post("/")]
     pub async fn store(req: Request) -> Response {
@@ -21,6 +21,10 @@ impl UserController {
 
     #[get("/:id")]
     pub async fn show(id: i32) -> Response {
-        Response::ok(format!("Showing user with id: {}", id))
+        if id == 0 {
+            return HTTPException!(status_code = 404, detail = "User not found");
+        }
+
+        Response::json("Hello")
     }
 }
