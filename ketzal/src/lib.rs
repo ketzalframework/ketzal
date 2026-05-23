@@ -24,9 +24,9 @@ pub use config::Bootstrap;
 // ── Route macros ──────────────────────────────────────────────────────────────
 
 #[cfg(feature = "web")]
-pub use ketzal_router_macros::{controller, delete, get, patch, post, put};
+pub use ketzal_macros::{controller, delete, get, patch, post, put};
 
 #[cfg(feature = "api")]
-pub use ketzal_router_macros::{api_controller, api_delete, api_get, api_patch, api_post, api_put};
+pub use ketzal_macros::{api_controller, api_delete, api_get, api_patch, api_post, api_put};
 
-pub use ketzal_router_macros::main;
+pub use ketzal_macros::main;

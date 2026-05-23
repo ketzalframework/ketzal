@@ -7,18 +7,23 @@ authors.workspace = true
 homepage.workspace = true
 repository.workspace = true
 [dependencies]
-ketzal-http          = { version = "0.1.0", path = "../ketzal-http" }
-ketzal-router        = { version = "0.1.0", path = "../ketzal-router" }
-ketzal-router-macros = { path = "../ketzal-router-macros" }
-ketzal-validation    = { version = "0.1.0", path = "../ketzal-validation" }
+ketzal-http = { version = "0.1.0", path = "../ketzal-http" }
+ketzal-router = { version = "0.1.0", path = "../ketzal-router" }
+ketzal-macros = { path = "../ketzal-macros" }
+ketzal-validation = { version = "0.1.0", path = "../ketzal-validation" }
 
-tokio     = { version = "1", features = ["macros", "rt-multi-thread", "net", "io-util"] }
+tokio = { version = "1", features = [
+    "macros",
+    "rt-multi-thread",
+    "net",
+    "io-util",
+] }
 inventory = "0.3"
-http      = "1"
-ctor      = "1.0.5"
+http = "1"
+ctor = "1.0.5"
 
 [features]
 default = ["web"]
-web     = []
-api     = []
-full    = ["web", "api"]
+web = []
+api = []
+full = ["web", "api"]
