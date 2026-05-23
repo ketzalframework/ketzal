@@ -4,8 +4,8 @@ members = [
   "example/users_web",
   "ketzal",
   "ketzal-http",
-  "ketzal-router", 
-  "ketzal-router-macros", 
+  "ketzal-router",
+  "ketzal-macros",
   "ketzal-templates",
   "ketzal-validation",
 
